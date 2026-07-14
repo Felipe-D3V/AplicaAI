@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import Card from "../UI/Card/Card";
 import {
     BookOpen,
     BarChart3,
@@ -48,6 +49,7 @@ export default function QuickActions(){
                 grid
                 md:grid-cols-3
                 gap-8
+                items-stretch
             ">
 
 
@@ -62,17 +64,17 @@ export default function QuickActions(){
                             <Link
                                 key={index}
                                 to={action.path}
+                                className="h-full"
                             >
 
-                                <div className="
-                                    bg-white
-                                    rounded-2xl
-                                    p-6
-                                    shadow
+                               <Card
+                                    className="
+                                    h-full
                                     hover:shadow-xl
                                     transition
                                     cursor-pointer
-                                ">
+                                    "
+                                >
 
 
                                     <Icon
@@ -97,7 +99,7 @@ export default function QuickActions(){
                                     </p>
 
 
-                                </div>
+                                </Card>
 
                             </Link>
 

@@ -8,7 +8,9 @@ import Diagnostic from "../pages/Diagnostic/Diagnostic";
 import DiagnosticResult from "../pages/DiagnosticResult/DiagnosticResult";
 import StudyPlan from "../pages/StudyPlan/StudyPlan";
 import Questions from "../pages/Questions/Questions";
-import Statistics from "../pages/Statistics/Statistics";
+import Statistics from "../pages/Statistics/Statistics"
+import Profile from "../pages/Profile/Profile";
+import Settings from "../pages/Settings/Settings";
 
 
 export default function AppRoutes(){
@@ -61,6 +63,16 @@ export default function AppRoutes(){
 <Route
     path="/statistics"
     element={<Statistics/>}
+/>
+
+<Route
+    path="/profile"
+    element={<Profile />}
+/>
+
+<Route
+    path="/settings"
+    element={<Settings />}
 />
 
 </Routes>

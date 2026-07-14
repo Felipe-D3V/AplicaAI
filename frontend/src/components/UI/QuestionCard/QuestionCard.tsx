@@ -1,31 +1,47 @@
 interface QuestionCardProps {
+    number: number;
     question: string;
     options: string[];
 }
 
-
 export default function QuestionCard({
+    number,
     question,
     options
-}: QuestionCardProps){
+}: QuestionCardProps) {
 
     return (
 
         <div className="
+            bg-white
+            rounded-2xl
+            shadow-md
+            p-8
             space-y-6
         ">
 
-            <h2 className="
-                text-xl
-                font-semibold
-            ">
-                {question}
-            </h2>
+            <div>
 
+                <span className="
+                    text-blue-600
+                    font-semibold
+                ">
+                    Questão {number}
+                </span>
+
+                <h2 className="
+                    text-xl
+                    font-bold
+                    mt-2
+                ">
+                    {question}
+                </h2>
+
+            </div>
 
             <div className="space-y-3">
 
-                {options.map((option,index)=>(
+                {options.map((option, index) => (
 
                     <button
                         key={index}
@@ -36,6 +52,7 @@ export default function QuestionCard({
                             rounded-xl
                             p-4
                             hover:bg-blue-50
+                            hover:border-blue-600
                             transition
                         "
                     >
@@ -46,8 +63,8 @@ export default function QuestionCard({
 
             </div>
 
-
         </div>
 
     );
+
 }

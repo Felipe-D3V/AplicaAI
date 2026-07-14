@@ -1,24 +1,20 @@
 import StatCard from "../../components/Statistics/StatCard";
 import SubjectPerformance from "../../components/Statistics/SubjectPerformance";
-import BackButton from "../../components/UI/BackButton/BackButton";
+import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
+
 
 
 export default function Statistics(){
 
     return (
 
-        <main className="
-            min-h-screen
-            bg-slate-50
-            p-6
-        ">
+        <AuthLayout>
 
 
             <div className="
                 max-w-7xl
                 mx-auto
             ">
-                <BackButton />
 
 
                 <h1 className="
@@ -131,7 +127,7 @@ export default function Statistics(){
             </div>
 
 
-        </main>
+        </AuthLayout>
 
     );
 

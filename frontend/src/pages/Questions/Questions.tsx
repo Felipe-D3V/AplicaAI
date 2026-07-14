@@ -1,25 +1,47 @@
-import QuestionCard from "../../components/Questions/QuestionCard";
+import QuestionCard from "../../components/UI/QuestionCard/QuestionCard";
 import ProgressBar from "../../components/UI/ProgressBar/ProgressBar";
-import BackButton from "../../components/UI/BackButton/BackButton";
+import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
 
+const questions = [
+    {
+        question: "Qual é a capital do Brasil?",
+        options: [
+            "São Paulo",
+            "Brasília",
+            "Rio de Janeiro",
+            "Belo Horizonte"
+        ]
+    },
+    {
+        question: "Quanto é 8 × 7?",
+        options: [
+            "54",
+            "56",
+            "58",
+            "64"
+        ]
+    },
+    {
+        question: "Quem escreveu Dom Casmurro?",
+        options: [
+            "Machado de Assis",
+            "José de Alencar",
+            "Carlos Drummond",
+            "Monteiro Lobato"
+        ]
+    }
+];
 
-export default function Questions(){
+export default function Questions() {
 
     return (
 
-        <main className="
-            min-h-screen
-            bg-slate-50
-            p-6
-        ">
-
+        <AuthLayout>
 
             <div className="
                 max-w-4xl
                 mx-auto
             ">
-                <BackButton confirm />
-
 
                 <h1 className="
                     text-4xl
@@ -29,7 +51,6 @@ export default function Questions(){
                     Banco de Questões 📝
                 </h1>
 
-
                 <p className="
                     text-gray-500
                     mb-8
@@ -37,11 +58,7 @@ export default function Questions(){
                     Pratique e melhore seu desempenho.
                 </p>
 
-
-
-                <div className="
-                    mb-8
-                ">
+                <div className="mb-10">
 
                     <div className="
                         flex
@@ -53,28 +70,34 @@ export default function Questions(){
                             Progresso da lista
                         </span>
 
-
                         <span>
                             5/20
                         </span>
 
                     </div>
 
-
-                    <ProgressBar progress={25}/>
-
+                    <ProgressBar progress={25} />
 
                 </div>
 
+                <div className="space-y-8">
 
+                    {questions.map((question, index) => (
 
+                        <QuestionCard
+                            key={index}
+                            number={index + 1}
+                            question={question.question}
+                            options={question.options}
+                        />
 
-                <QuestionCard/>
+                    ))}
+
+                </div>
 
             </div>
 
-
-        </main>
+        </AuthLayout>
 
     );
 

@@ -1,23 +1,18 @@
 import SubjectProgress from "../../components/StudyPlan/SubjectProgress";
-import BackButton from "../../components/UI/BackButton/BackButton";
+import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
 
 
 export default function StudyPlan(){
 
     return (
 
-        <main className="
-            min-h-screen
-            bg-slate-50
-            p-6
-        ">
+        <AuthLayout>
 
 
             <div className="
                 max-w-7xl
                 mx-auto
             ">
-                <BackButton />
 
 
                 <h1 className="
@@ -101,7 +96,7 @@ export default function StudyPlan(){
             </div>
 
 
-        </main>
+        </AuthLayout>
 
     );
 

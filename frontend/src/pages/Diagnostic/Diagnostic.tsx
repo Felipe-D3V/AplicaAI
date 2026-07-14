@@ -2,7 +2,7 @@ import Card from "../../components/UI/Card/Card";
 import Button from "../../components/UI/Button/Button";
 import ProgressBar from "../../components/UI/ProgressBar/ProgressBar";
 
-import QuestionCard from "../../components/QuestionCard/QuestionCard";
+import QuestionCard from "../../components/UI/QuestionCard/QuestionCard";
 
 
 export default function Diagnostic(){

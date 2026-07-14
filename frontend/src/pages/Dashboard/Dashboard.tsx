@@ -11,32 +11,19 @@ import SubjectCard from "../../components/Dashboard/SubjectCard";
 import StudyProgress from "../../components/Dashboard/StudyProgress";
 import { fakeUser } from "../../mock/user";
 import QuickActions from "../../components/Dashboard/QuickActions";
-import LogoutButton from "../../components/Dashboard/LogoutButton";
-
+import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
 
 export default function Dashboard(){
 
     return (
-
-        <main className="
-            min-h-screen
-            bg-slate-50
-            p-6
-        ">
+<AuthLayout>
+        
             
             <div className="
                 max-w-7xl
                 mx-auto
             ">
                 
-                <div className="
-                w-full
-                flex
-                justify-end
-                mb-6
-            ">
-            <LogoutButton />
-            </div>
 
 
                 <WelcomeCard 
@@ -116,7 +103,8 @@ export default function Dashboard(){
 
             </div>
 
-        </main>
+        
+        </AuthLayout>
 
     );
 }
