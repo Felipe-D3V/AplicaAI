@@ -4,7 +4,8 @@ import Button from "../../components/UI/Button/Button";
 import Input from "../../components/UI/Input/Input";
 import Card from "../../components/UI/Card/Card";
 import Alert from "../../components/UI/Alert/Alert";
-
+import { useAuth } from "../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 
@@ -14,6 +15,9 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const [error, setError] = useState("");
+
+    const { login } = useAuth();
+    const navigate = useNavigate();
 
 
 
@@ -42,13 +46,25 @@ export default function Login() {
         }
 
 
-        console.log({
-            email,
-            password
-        });
+        login({
 
+        id: 1,
 
-        alert("Login realizado com sucesso!");
+        name: "Felipe Gabriel",
+
+        email: email,
+
+        targetScore: 800,
+
+        level: "Intermediário",
+
+        streak: 12,
+
+        progress: 62
+
+    });
+
+    navigate("/dashboard");
 
     }
 

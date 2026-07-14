@@ -1,5 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import SidebarItem from "./SidebarItem";
+import { useAuth } from "../../../contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 import {
     GraduationCap,
@@ -48,6 +50,13 @@ const links = [
 export default function Sidebar() {
 
     const location = useLocation();
+    const { logout } = useAuth();
+    const navigate = useNavigate();
+
+    function handleLogout() {
+    logout();
+    navigate("/");
+}
 
     return (
 
@@ -137,12 +146,12 @@ export default function Sidebar() {
             <div className="p-4 mt-auto">
 
             <SidebarItem
-                icon={LogOut}
-                label="Sair"
-                path="/"
-                active={false}
-                danger
-            />
+            icon={LogOut}
+            label="Sair"
+            active={false}
+            danger
+            onClick={handleLogout}
+/>
 
             </div>
 

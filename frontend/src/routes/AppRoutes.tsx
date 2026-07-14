@@ -11,6 +11,7 @@ import Questions from "../pages/Questions/Questions";
 import Statistics from "../pages/Statistics/Statistics"
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
+import PrivateRoute from "./PrivateRoute";
 
 
 export default function AppRoutes(){
@@ -45,34 +46,57 @@ export default function AppRoutes(){
         element={<DiagnosticResult/>}
     />
 
-    <Route 
-        path="/dashboard" 
-        element={<Dashboard/>}
-    />
+    <Route
+    path="/dashboard"
+    element={
+        <PrivateRoute>
+            <Dashboard />
+        </PrivateRoute>
+    }
+/>
 
     <Route
     path="/study-plan"
-    element={<StudyPlan/>}
+    element={
+    <PrivateRoute>
+        <StudyPlan />
+    </PrivateRoute>}
 />
 
 <Route
     path="/questions"
-    element={<Questions/>}
+    element={
+        <PrivateRoute>
+            <Questions />
+        </PrivateRoute>
+    }
 />
 
 <Route
     path="/statistics"
-    element={<Statistics/>}
+    element={
+        <PrivateRoute>
+            <Statistics />
+        </PrivateRoute>
+    }
 />
 
 <Route
     path="/profile"
-    element={<Profile />}
+    element={
+        <PrivateRoute>
+            <Profile />
+        </PrivateRoute>
+    }
 />
 
 <Route
     path="/settings"
-    element={<Settings />}
+    element={
+        <PrivateRoute>
+            <Settings />
+        </PrivateRoute>
+    }
 />
 
 </Routes>

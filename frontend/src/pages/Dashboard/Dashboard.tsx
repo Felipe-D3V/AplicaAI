@@ -9,12 +9,15 @@ import WelcomeCard from "../../components/Dashboard/WelcomeCard";
 import StatsCard from "../../components/Dashboard/StatsCard";
 import SubjectCard from "../../components/Dashboard/SubjectCard";
 import StudyProgress from "../../components/Dashboard/StudyProgress";
-import { fakeUser } from "../../mock/user";
+import { useAuth } from "../../contexts/AuthContext";
 import QuickActions from "../../components/Dashboard/QuickActions";
 import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
 
+
 export default function Dashboard(){
 
+    const { user } = useAuth();
+    
     return (
 <AuthLayout>
         
@@ -27,7 +30,7 @@ export default function Dashboard(){
 
 
                 <WelcomeCard 
-                name={fakeUser.name}
+                name={user?.name ?? "Estudante"}
                 />
 
                 
