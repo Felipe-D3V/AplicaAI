@@ -1,4 +1,5 @@
-import Button from "../Button/Button";
+import Button from "../../UI/Button/Button";
+import { ProgressBar } from "../../UI";
 
 export default function Hero() {
   return (
@@ -46,9 +47,10 @@ export default function Hero() {
                 <span>35%</span>
               </div>
 
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-red-500 h-3 rounded-full w-[35%]"></div>
-              </div>
+              <ProgressBar 
+              progress={35}
+              color="bg-red-500"
+              />
             </div>
 
             <div>
@@ -57,9 +59,11 @@ export default function Hero() {
                 <span>82%</span>
               </div>
 
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-green-500 h-3 rounded-full w-[82%]"></div>
-              </div>
+              <ProgressBar 
+              progress={82}
+              color="bg-green-500"
+              />
+
             </div>
 
             <div>
@@ -68,9 +72,10 @@ export default function Hero() {
                 <span>58%</span>
               </div>
 
-              <div className="w-full bg-gray-200 rounded-full h-3">
-                <div className="bg-yellow-500 h-3 rounded-full w-[58%]"></div>
-              </div>
+              <ProgressBar 
+              progress={58}
+              color="bg-yellow-500"
+              />
             </div>
 
           </div>

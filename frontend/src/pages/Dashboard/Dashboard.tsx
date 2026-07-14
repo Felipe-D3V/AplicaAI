@@ -1,0 +1,122 @@
+import {
+    Target,
+    TrendingUp,
+    Brain
+} from "lucide-react";
+
+
+import WelcomeCard from "../../components/Dashboard/WelcomeCard";
+import StatsCard from "../../components/Dashboard/StatsCard";
+import SubjectCard from "../../components/Dashboard/SubjectCard";
+import StudyProgress from "../../components/Dashboard/StudyProgress";
+import { fakeUser } from "../../mock/user";
+import QuickActions from "../../components/Dashboard/QuickActions";
+import LogoutButton from "../../components/Dashboard/LogoutButton";
+
+
+export default function Dashboard(){
+
+    return (
+
+        <main className="
+            min-h-screen
+            bg-slate-50
+            p-6
+        ">
+            
+            <div className="
+                max-w-7xl
+                mx-auto
+            ">
+                
+                <div className="
+                w-full
+                flex
+                justify-end
+                mb-6
+            ">
+            <LogoutButton />
+            </div>
+
+
+                <WelcomeCard 
+                name={fakeUser.name}
+                />
+
+                
+
+
+                <div className="
+                    grid
+                    md:grid-cols-3
+                    gap-6
+                    mb-10
+                ">
+
+                    <StatsCard
+                        icon={<Target className="text-blue-600"/>}
+                        title="Meta ENEM"
+                        value="800+"
+                    />
+
+
+                    <StatsCard
+                        icon={<TrendingUp className="text-green-600"/>}
+                        title="Evolução"
+                        value="+12%"
+                    />
+
+
+                    <StatsCard
+                        icon={<Brain className="text-purple-600"/>}
+                        title="Nível Atual"
+                        value="Intermediário"
+                    />
+
+                </div>
+
+
+
+                <StudyProgress/>
+
+
+
+                <div className="
+                    grid
+                    md:grid-cols-3
+                    gap-6
+                    mt-10
+                ">
+
+
+                    <SubjectCard
+                        name="Matemática"
+                        progress={45}
+                        color="bg-red-500"
+                    />
+
+
+                    <SubjectCard
+                        name="Português"
+                        progress={80}
+                        color="bg-blue-500"
+                    />
+
+
+                    <SubjectCard
+                        name="Natureza"
+                        progress={60}
+                        color="bg-green-500"
+                    />
+
+                    
+                </div>
+                <QuickActions />
+
+
+            </div>
+
+        </main>
+
+    );
+}
