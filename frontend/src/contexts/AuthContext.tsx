@@ -3,21 +3,28 @@ import {
     useContext,
     useState,
 } from "react";
+
 import type { ReactNode } from "react";
 
 import type { User } from "../types/User";
+
+import api from "../api/api";
 
 interface AuthContextType {
 
     user: User | null;
 
-    login: (user: User) => void;
+    login: (
+        email: string,
+        password: string
+    ) => Promise<void>;
 
     logout: () => void;
 
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext =
+    createContext<AuthContextType | undefined>(undefined);
 
 interface Props {
     children: ReactNode;
@@ -29,33 +36,64 @@ export function AuthProvider({
 
     const [user, setUser] = useState<User | null>(() => {
 
-    const storedUser = localStorage.getItem("user");
+        const storedUser =
+            localStorage.getItem("user");
 
-    if (storedUser) {
-        return JSON.parse(storedUser);
-    }
+        if (storedUser) {
+            return JSON.parse(storedUser);
+        }
 
-    return null;
+        return null;
 
-});
+    });
 
-    function login(user: User) {
+
+    async function login(
+        email: string,
+        password: string
+    ) {
+
+        const response = await api.post(
+            "/auth/login",
+            {
+                email,
+                password
+            }
+        );
+
+        const user =
+            response.data.data.user;
+
+        const token =
+            response.data.data.token;
+
 
         localStorage.setItem(
-        "user",
-        JSON.stringify(user)
-    );
+            "user",
+            JSON.stringify(user)
+        );
 
-    setUser(user);
+        localStorage.setItem(
+            "token",
+            token
+        );
+
+
+        setUser(user);
 
     }
+
 
     function logout() {
 
         localStorage.removeItem("user");
+
+        localStorage.removeItem("token");
+
         setUser(null);
 
     }
+
 
     return (
 
@@ -75,9 +113,11 @@ export function AuthProvider({
 
 }
 
+
 export function useAuth() {
 
-    const context = useContext(AuthContext);
+    const context =
+        useContext(AuthContext);
 
     if (!context) {
 

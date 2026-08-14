@@ -17,6 +17,15 @@ import AuthLayout from "../../components/Layout/AuthLayout/AuthLayout";
 export default function Dashboard(){
 
     const { user } = useAuth();
+
+    const levelNames: Record<string, string> = {
+    BEGINNER: "Iniciante",
+    INTERMEDIATE: "Intermediário",
+    ADVANCED: "Avançado"
+};
+
+    const currentLevel =
+    levelNames[user?.level ?? "BEGINNER"] ?? "Iniciante";
     
     return (
 <AuthLayout>
@@ -46,7 +55,7 @@ export default function Dashboard(){
                     <StatsCard
                         icon={<Target className="text-blue-600"/>}
                         title="Meta ENEM"
-                        value="800+"
+                        value={`${user?.targetScore ?? 800}+`}
                     />
 
 
@@ -60,7 +69,7 @@ export default function Dashboard(){
                     <StatsCard
                         icon={<Brain className="text-purple-600"/>}
                         title="Nível Atual"
-                        value="Intermediário"
+                        value={currentLevel}
                     />
 
                 </div>

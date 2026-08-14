@@ -7,6 +7,7 @@ import Alert from "../../components/UI/Alert/Alert";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+import api from "../../api/api";
 
 
 export default function Login() {
@@ -21,53 +22,55 @@ export default function Login() {
 
 
 
-    function handleSubmit(event: React.FormEvent) {
+    async function handleSubmit(event: React.FormEvent) {
 
-        event.preventDefault();
+    event.preventDefault();
 
-        setError("");
-
-
-        if (!email || !password) {
-            setError("Preencha todos os campos!");
-            return;
-        }
+    setError("");
 
 
-        if (!email.includes("@")) {
-            setError("Digite um email válido!");
-            return;
-        }
+    if (!email || !password) {
+
+        setError("Preencha todos os campos!");
+
+        return;
+    }
 
 
-        if (password.length < 8) {
-            setError("Senha inválida!");
-            return;
-        }
+    if (!email.includes("@")) {
+
+        setError("Digite um email válido!");
+
+        return;
+    }
 
 
-        login({
+    if (password.length < 8) {
 
-        id: 1,
+        setError("Senha inválida!");
 
-        name: "Felipe Gabriel",
+        return;
+    }
 
-        email: email,
 
-        targetScore: 800,
+   try {
 
-        level: "Intermediário",
+    await login(email, password);
 
-        streak: 12,
+    const response = await api.get("/users/me");
 
-        progress: 62
-
-    });
+    console.log("Usuário autenticado:", response.data);
 
     navigate("/dashboard");
 
+    } catch (error) {
+
+    setError("Email ou senha inválidos.");
+
     }
 
+}
+    
 
 
     return (
