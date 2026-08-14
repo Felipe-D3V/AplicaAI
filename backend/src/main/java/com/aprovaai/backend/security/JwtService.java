@@ -3,13 +3,13 @@ package com.aprovaai.backend.security;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
-import io.jsonwebtoken.io.Decoders;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.function.Function;
 
@@ -24,28 +24,34 @@ public class JwtService {
 
     private SecretKey getSigningKey() {
 
-    return Keys.hmacShaKeyFor(secret.getBytes());
+        return Keys.hmacShaKeyFor(
+                secret.getBytes(StandardCharsets.UTF_8)
+        );
 
-}
+    }
 
-    public String generateToken(String email){
+    public String generateToken(String email) {
 
         return Jwts.builder()
                 .subject(email)
                 .issuedAt(new Date())
-                .expiration(new Date(System.currentTimeMillis() + expiration))
+                .expiration(
+                        new Date(System.currentTimeMillis() + expiration)
+                )
                 .signWith(getSigningKey())
                 .compact();
-
     }
 
-    public String extractUsername(String token){
+    public String extractUsername(String token) {
 
         return extractClaim(token, Claims::getSubject);
 
     }
 
-    public <T> T extractClaim(String token, Function<Claims, T> resolver){
+    public <T> T extractClaim(
+            String token,
+            Function<Claims, T> resolver
+    ) {
 
         Claims claims = Jwts.parser()
                 .verifyWith(getSigningKey())
@@ -54,21 +60,20 @@ public class JwtService {
                 .getPayload();
 
         return resolver.apply(claims);
-
     }
 
-    public boolean isTokenValid(String token, String email){
+    public boolean isTokenValid(
+            String token,
+            String email
+    ) {
 
         return email.equals(extractUsername(token))
                 && !isTokenExpired(token);
-
     }
 
-    private boolean isTokenExpired(String token){
+    private boolean isTokenExpired(String token) {
 
         return extractClaim(token, Claims::getExpiration)
                 .before(new Date());
-
     }
-
 }
