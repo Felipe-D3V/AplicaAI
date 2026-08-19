@@ -7,7 +7,6 @@ import Alert from "../../components/UI/Alert/Alert";
 import { useAuth } from "../../contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import api from "../../api/api";
 
 
 export default function Login() {
@@ -56,10 +55,6 @@ export default function Login() {
    try {
 
     await login(email, password);
-
-    const response = await api.get("/users/me");
-
-    console.log("Usuário autenticado:", response.data);
 
     navigate("/dashboard");
 
