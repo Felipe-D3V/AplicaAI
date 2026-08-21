@@ -2,24 +2,17 @@ package com.aprovaai.backend.service;
 
 import com.aprovaai.backend.dto.request.CreateAlternativeRequest;
 import com.aprovaai.backend.dto.request.CreateQuestionRequest;
+import com.aprovaai.backend.dto.response.QuestionPageResponse;
 import com.aprovaai.backend.dto.response.QuestionResponse;
 import com.aprovaai.backend.entity.Alternative;
 import com.aprovaai.backend.entity.Question;
-import com.aprovaai.backend.entity.QuestionAttempt;
 import com.aprovaai.backend.mapper.QuestionMapper;
 import com.aprovaai.backend.repository.QuestionRepository;
-import com.aprovaai.backend.dto.response.QuestionAttemptResponse;
-
-
-import com.aprovaai.backend.dto.request.AnswerQuestionRequest;
-import com.aprovaai.backend.dto.response.AnswerQuestionResponse;
-import com.aprovaai.backend.repository.QuestionAttemptRepository;
-import com.aprovaai.backend.repository.UserRepository;
-import com.aprovaai.backend.entity.User;
 
 import lombok.RequiredArgsConstructor;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,8 +23,6 @@ import java.util.List;
 public class QuestionService {
 
     private final QuestionRepository questionRepository;
-    private final QuestionAttemptRepository questionAttemptRepository;
-    private final UserRepository userRepository;
 
     @Transactional
     public QuestionResponse create(CreateQuestionRequest request) {
@@ -64,15 +55,6 @@ public class QuestionService {
     }
 
     @Transactional(readOnly = true)
-    public List<QuestionResponse> findAll() {
-
-        return questionRepository.findAll()
-                .stream()
-                .map(QuestionMapper::toResponse)
-                .toList();
-    }
-
-    @Transactional(readOnly = true)
     public QuestionResponse findById(Long id) {
 
         Question question = questionRepository.findById(id)
@@ -82,84 +64,95 @@ public class QuestionService {
 
         return QuestionMapper.toResponse(question);
     }
-    @Transactional
-public AnswerQuestionResponse answer(
-        Long questionId,
-        AnswerQuestionRequest request,
-        Authentication authentication
-) {
 
-    Question question = questionRepository.findById(questionId)
-            .orElseThrow(() ->
-                    new RuntimeException("Questão não encontrada.")
-            );
-
-    Alternative selectedAlternative =
-            question.getAlternatives()
-                    .stream()
-                    .filter(alternative ->
-                            alternative.getId()
-                                    .equals(request.getAlternativeId())
-                    )
-                    .findFirst()
-                    .orElseThrow(() ->
-                            new RuntimeException(
-                                    "Alternativa não pertence à questão."
-                            )
-                    );
-
-    User user = userRepository.findByEmail(
-            authentication.getName()
-    ).orElseThrow(() ->
-            new RuntimeException("Usuário não encontrado.")
-    );
-
-    boolean correct = Boolean.TRUE.equals(
-            selectedAlternative.getCorrect()
-    );
-
-    QuestionAttempt attempt = QuestionAttempt.builder()
-            .user(user)
-            .question(question)
-            .selectedAlternative(selectedAlternative)
-            .correct(correct)
-            .build();
-
-    questionAttemptRepository.save(attempt);
-
-    return AnswerQuestionResponse.builder()
-            .questionId(question.getId())
-            .selectedAlternativeId(selectedAlternative.getId())
-            .correct(correct)
-            .build();
-}
     @Transactional(readOnly = true)
-    public List<QuestionAttemptResponse> getHistory(
-        Authentication authentication
+    public QuestionPageResponse find(
+            String subject,
+            String topic,
+            String difficulty,
+            Pageable pageable
     ) {
 
-    User user = userRepository.findByEmail(
-            authentication.getName()
-    ).orElseThrow(() ->
-            new RuntimeException("Usuário não encontrado.")
-    );
+        Page<Question> page;
 
-        return questionAttemptRepository
-            .findByUserOrderByAnsweredAtDesc(user)
-            .stream()
-            .map(attempt ->
-                    QuestionAttemptResponse.builder()
-                            .id(attempt.getId())
-                            .questionId(
-                                    attempt.getQuestion().getId()
-                            )
-                            .selectedAlternativeId(
-                                    attempt.getSelectedAlternative().getId()
-                            )
-                            .correct(attempt.getCorrect())
-                            .answeredAt(attempt.getAnsweredAt())
-                            .build()
-            )
-            .toList();
+        if (subject != null && topic != null && difficulty != null) {
+
+            page = questionRepository
+                    .findBySubjectAndTopicAndDifficulty(
+                            subject,
+                            topic,
+                            difficulty,
+                            pageable
+                    );
+
+        } else if (subject != null && topic != null) {
+
+            page = questionRepository
+                    .findBySubjectAndTopic(
+                            subject,
+                            topic,
+                            pageable
+                    );
+
+        } else if (subject != null && difficulty != null) {
+
+            page = questionRepository
+                    .findBySubjectAndDifficulty(
+                            subject,
+                            difficulty,
+                            pageable
+                    );
+
+        } else if (topic != null && difficulty != null) {
+
+            page = questionRepository
+                    .findByTopicAndDifficulty(
+                            topic,
+                            difficulty,
+                            pageable
+                    );
+
+        } else if (subject != null) {
+
+            page = questionRepository
+                    .findBySubject(
+                            subject,
+                            pageable
+                    );
+
+        } else if (topic != null) {
+
+            page = questionRepository
+                    .findByTopic(
+                            topic,
+                            pageable
+                    );
+
+        } else if (difficulty != null) {
+
+            page = questionRepository
+                    .findByDifficulty(
+                            difficulty,
+                            pageable
+                    );
+
+        } else {
+
+            page = questionRepository.findAll(pageable);
+        }
+
+        List<QuestionResponse> questions = page
+                .getContent()
+                .stream()
+                .map(QuestionMapper::toResponse)
+                .toList();
+
+        return QuestionPageResponse.builder()
+                .questions(questions)
+                .currentPage(page.getNumber())
+                .totalPages(page.getTotalPages())
+                .totalElements(page.getTotalElements())
+                .pageSize(page.getSize())
+                .build();
     }
 }

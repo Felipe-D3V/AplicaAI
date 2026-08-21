@@ -6,7 +6,9 @@ import com.aprovaai.backend.service.QuestionService;
 import com.aprovaai.backend.dto.request.AnswerQuestionRequest;
 import com.aprovaai.backend.dto.response.AnswerQuestionResponse;
 import com.aprovaai.backend.dto.response.QuestionAttemptResponse;
-
+import com.aprovaai.backend.dto.response.QuestionPageResponse;
+import org.springframework.data.domain.Pageable;
+import com.aprovaai.backend.service.QuestionAttemptService;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,13 +20,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+
 @RestController
 @RequestMapping("/questions")
 @RequiredArgsConstructor
-
 public class QuestionController {
 
     private final QuestionService questionService;
+    private final QuestionAttemptService questionAttemptService;
 
     @PostMapping
     public ResponseEntity<QuestionResponse> create(
@@ -35,12 +38,32 @@ public class QuestionController {
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
     @GetMapping
-    public ResponseEntity<List<QuestionResponse>> findAll() {
+    public ResponseEntity<QuestionPageResponse> find(
+        @RequestParam(required = false) String subject,
+        @RequestParam(required = false) String topic,
+        @RequestParam(required = false) String difficulty,
+        Pageable pageable
+    ) {
 
-    return ResponseEntity.ok(
-            questionService.findAll()
+        return ResponseEntity.ok(
+            questionService.find(
+                    subject,
+                    topic,
+                    difficulty,
+                    pageable
+            )
     );
 }
+
+    @GetMapping("/wrong")
+    public ResponseEntity<List<QuestionResponse>> getWrongQuestions(
+        Authentication authentication
+    ) {
+
+        return ResponseEntity.ok(
+            questionAttemptService.getWrongQuestions(authentication)
+        );
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<QuestionResponse> findById(
@@ -60,7 +83,7 @@ public class QuestionController {
     ) {
 
     AnswerQuestionResponse response =
-            questionService.answer(
+            questionAttemptService.answer(
                     id,
                     request,
                     authentication
@@ -75,7 +98,7 @@ public class QuestionController {
     ) {
 
         return ResponseEntity.ok(
-            questionService.getHistory(authentication)
+            questionAttemptService.getHistory(authentication)
     );
     }
     

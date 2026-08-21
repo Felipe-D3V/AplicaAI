@@ -4,13 +4,11 @@ import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDateTime;
-
-import org.springframework.security.core.userdetails.UserDetails;
-
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.GrantedAuthority;
 import java.util.Collection;
 import java.util.List;
+
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Entity
 @Table(name = "users")
@@ -19,7 +17,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-
 public class User implements UserDetails {
 
     @Id
@@ -35,8 +32,9 @@ public class User implements UserDetails {
     @Column(nullable = false)
     private String password;
 
+    @Enumerated(EnumType.STRING)
     @Column(nullable = false)
-    private String role;
+    private Role role;
 
     private String avatar;
 
@@ -51,11 +49,12 @@ public class User implements UserDetails {
 
     @PrePersist
     public void prePersist() {
+
         createdAt = LocalDateTime.now();
         updatedAt = LocalDateTime.now();
 
         if (role == null) {
-            role = "USER";
+            role = Role.USER;
         }
 
         if (targetScore == null) {
@@ -74,7 +73,7 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(() -> role);
+        return List.of(() -> role.name());
     }
 
     @Override
@@ -101,5 +100,4 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
-
 }

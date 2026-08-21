@@ -11,4 +11,12 @@ public interface QuestionAttemptRepository
         extends JpaRepository<QuestionAttempt, Long> {
 
     List<QuestionAttempt> findByUserOrderByAnsweredAtDesc(User user);
+
+    long countByUser(User user);
+    
+    long countByUserAndCorrectTrue(User user);
+
+    long countByUserAndCorrectFalse(User user);
+
+    List<QuestionAttempt> findByUserAndCorrectFalseOrderByAnsweredAtDesc(User user);
 }
