@@ -19,4 +19,6 @@ public interface QuestionAttemptRepository
     long countByUserAndCorrectFalse(User user);
 
     List<QuestionAttempt> findByUserAndCorrectFalseOrderByAnsweredAtDesc(User user);
+
+    List<QuestionAttempt> findByUser(User user);
 }

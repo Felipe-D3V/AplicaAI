@@ -8,11 +8,13 @@ import com.aprovaai.backend.entity.Alternative;
 import com.aprovaai.backend.entity.Question;
 import com.aprovaai.backend.mapper.QuestionMapper;
 import com.aprovaai.backend.repository.QuestionRepository;
+import com.aprovaai.backend.specification.QuestionSpecification;
 
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -70,76 +72,42 @@ public class QuestionService {
             String subject,
             String topic,
             String difficulty,
+            String search,
             Pageable pageable
     ) {
 
-        Page<Question> page;
+        Specification<Question> specification =
+                Specification.unrestricted();
 
-        if (subject != null && topic != null && difficulty != null) {
-
-            page = questionRepository
-                    .findBySubjectAndTopicAndDifficulty(
-                            subject,
-                            topic,
-                            difficulty,
-                            pageable
-                    );
-
-        } else if (subject != null && topic != null) {
-
-            page = questionRepository
-                    .findBySubjectAndTopic(
-                            subject,
-                            topic,
-                            pageable
-                    );
-
-        } else if (subject != null && difficulty != null) {
-
-            page = questionRepository
-                    .findBySubjectAndDifficulty(
-                            subject,
-                            difficulty,
-                            pageable
-                    );
-
-        } else if (topic != null && difficulty != null) {
-
-            page = questionRepository
-                    .findByTopicAndDifficulty(
-                            topic,
-                            difficulty,
-                            pageable
-                    );
-
-        } else if (subject != null) {
-
-            page = questionRepository
-                    .findBySubject(
-                            subject,
-                            pageable
-                    );
-
-        } else if (topic != null) {
-
-            page = questionRepository
-                    .findByTopic(
-                            topic,
-                            pageable
-                    );
-
-        } else if (difficulty != null) {
-
-            page = questionRepository
-                    .findByDifficulty(
-                            difficulty,
-                            pageable
-                    );
-
-        } else {
-
-            page = questionRepository.findAll(pageable);
+        if (subject != null && !subject.isBlank()) {
+            specification = specification.and(
+                    QuestionSpecification.hasSubject(subject)
+            );
         }
+
+        if (topic != null && !topic.isBlank()) {
+            specification = specification.and(
+                    QuestionSpecification.hasTopic(topic)
+            );
+        }
+
+        if (difficulty != null && !difficulty.isBlank()) {
+            specification = specification.and(
+                    QuestionSpecification.hasDifficulty(difficulty)
+            );
+        }
+
+        if (search != null && !search.isBlank()) {
+            specification = specification.and(
+                    QuestionSpecification.statementContains(search)
+            );
+        }
+
+        Page<Question> page =
+                questionRepository.findAll(
+                        specification,
+                        pageable
+                );
 
         List<QuestionResponse> questions = page
                 .getContent()
